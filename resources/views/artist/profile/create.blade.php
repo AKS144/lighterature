@@ -5,6 +5,14 @@
 <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/select2-bootstrap4.min.css') }}">
 
+
+<style>
+    label.error {
+        color: #dc3545;
+        font-size: 14px;
+    }
+</style>
+
 <!-- Header End -->
 <!-- Breadcrumb Section End -->
 <!-- About Section Begin -->
@@ -54,6 +62,7 @@
                     </span>
                 @endif
             </div>
+
             <div class="col-md-4 {{ $errors->has('email') ? 'has-error' : '' }}">
                 <label>Email</label>
                 <input type="email" name="email" class="form-control" id="email" placeholder="Email"><br>
@@ -63,6 +72,7 @@
                     </span>
                 @endif
             </div>
+
             <div class="col-md-4">
                 <label>{{ __('Gender') }}</label><br>
                 <select class="form-control" name="gender" id="" required>
@@ -88,6 +98,7 @@
                     <option>{{ __('Voter Card') }}</option>
                 </select>
             </div>
+            
             <div class="col-md-4">
                 <div class="col-md-4 {{ $errors->has('id_no') ? 'has-error' : '' }}">
                     <label for="">{{ __('ID Number') }}</label>
@@ -264,8 +275,7 @@
         html += '<div class="row">';
         html += '<div class="col-md-6">';
         html += '<label>&nbsp;</label>';
-        html +=
-            '<input type="text" name="add_Equipment[]" class="form-control m-input" placeholder="Enter Equipment" autocomplete="off">';
+        html += '<input type="text" name="add_Equipment[]" class="form-control m-input" placeholder="Enter Equipment" autocomplete="off">';
         html += '</div >';
         html += '<div class="col-md-1" style="margin-top: -21px;">';
         html += '<label style="padding-bottom: 21px;">&nbsp;</label>';
@@ -291,3 +301,157 @@
         })
     });
 </script>
+
+
+<!--Frontend validation-->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+
+
+    <script>
+        $(document).ready(function($) {
+            $("#regForm").validate({
+                rules: {
+                    name: {
+                        required : true,
+                        minlength : 2,
+                        maxlength : 50
+                    },                   
+                    username: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 20,
+                    },
+                    mobile: {
+                        required: true,
+                        minlength: 10,
+                        maxlength: 10,
+                        number: true
+                    },
+                    email: {
+                        required: true,
+                        email: true,
+                        maxlength: 50,
+                        uniqueEmail: true
+                    },
+                    dob: {
+                        required: true,
+                        date: true
+                    },
+                    id_type: {
+                        required: true,
+                    },
+                    id_no: {
+                        required: true,
+                        number: true,
+                        minlength: 6,
+                        maxlength: 12,
+                    },
+                    gender: {
+                        required: true
+                    },
+                    profile_img: {
+                        required:true,
+                        accept: "image/jpg,image/jpeg,image/png,image/gif",
+                        filesize : 2,
+                    },
+                    exp_yrs: {
+                        required: true,
+                        minlength: 1,
+                        maxlength: 2,
+                        number: true,
+                    },
+                    worked_loc:{
+                        minlength: 3,
+                        maxlength: 255,
+                    },
+                    course_name: {
+                        required: true,
+                        maxlength: 255,
+                    },
+                    course_cert_img:{
+                        required:true,
+                        accept: "image/jpg,image/jpeg,image/png,image/gif",
+                        filesize : 5,
+                    },
+                    qualification:{
+                        required: true,
+                    },                    
+                    studio_address: {
+                        minlength: 5,
+                        maxlength: 255,
+                    },                    
+                },
+                messages: {
+                    name: {
+                        required: "First name is required",
+                        minlength: "First name cannot be less than 2 characters",
+                        maxlength: "First name cannot be more than 20 characters"
+                    },
+                    username: {
+                        required: "Username is required",
+                        minlength: "Username cannot be less than 2 characters",
+                        maxlength: "Username cannot be more than 20 characters",
+                    },
+                    mobile: {
+                        required: "Phone number is required",
+                        minlength: "Number should be more than 10",
+                        maxlength: "Number should be less than 10",
+                        number: "Please fill only number",
+                    },
+                    email: {
+                        required: "e-Mail is required",
+                        email: "e-Mail must be an email",
+                        maxlength: "e-mail length should not exceed more than 50 characters",
+                    },
+                    id_no: {
+                        required: "Id number is required",
+                        number: "Only number is valid",
+                        minlength: "Id number should not be less than 6",
+                        maxlength: "Id number should not be more than 12",
+                    },
+                    gender: {
+                        required: "Please enter gender"
+                    },
+                    profile_img: {
+                        required:"Profile image is required",
+                        accept: "Only image type in format jpg,jpeg,png allowed",
+                        filesize : "Size should be less than 2MB",
+                    },
+                    exp_yrs: {
+                        required: "Years of experience is required",
+                        minlength: "Please enter valid years of experience",
+                        maxlength: "Please enter valid years of experience",
+                        number: "Only numbers are allowed"
+                    },
+                    worked_loc:{
+                        minlength: "Please enter valid worked location",
+                        maxlength: "Length should be less than 255",
+                    },
+                    course_name: {
+                        //required: true,
+                        minlength: "Course name should be of proper name",
+                        maxlength: "Course name should not exceed more than 255",
+                    },
+                    cour_cert_img:{
+                        //required:true,
+                        accept: "Image should be of type jpg,jpeg,png",
+                        filesize : "Size should be less than 5MB",
+                    },
+                    qualification:{
+                        required: "Qualification is required",
+                    },                   
+                    studio_address: {
+                        minlength: "Length should be more than 2 character",
+                        maxlength: "Length should be less than 255 character",
+                    },
+                    skills:{
+                        minlength: "Length should be more than 2 character",
+                        maxlength:"Length should be less than 255 character",
+                    },                    
+                }
+            });
+        });
+    </script>

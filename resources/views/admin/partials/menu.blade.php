@@ -82,6 +82,14 @@
                     </a>
                 </li>
             @endcan
+            <li class="nav-item">
+                <a href="{{ route("admin.rewards.index") }}" class="nav-link {{ request()->is('admin/rewards') || request()->is('admin/rewards/*') ? 'active' : '' }}">
+                    <i class="fa-fw fas fa-building nav-icon">
+
+                    </i>
+                   Rewards
+                </a>
+            </li>
             @can('job_access')
                 <li class="nav-item">
                     <a href="{{ route("admin.jobs.index") }}" class="nav-link {{ request()->is('admin/jobs') || request()->is('admin/jobs/*') ? 'active' : '' }}">

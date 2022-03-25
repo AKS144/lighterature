@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contract;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ConreqController extends Controller
 {
@@ -29,21 +30,32 @@ class ConreqController extends Controller
         // $file = $folderPath . $signature; 
         // file_put_contents($file, $image_base64);
 
+        $folderPath = public_path('upload/');       
+        $image_parts = explode(";base64,", $request->signed);             
+        $image_type_aux = explode("image/", $image_parts[0]);           
+        $image_type = $image_type_aux[1];           
+        $image_base64 = base64_decode($image_parts[1]); 
+        $signature = uniqid() . '.'.$image_type;           
+        $file = $folderPath . $signature; 
+        file_put_contents($file, $image_base64);
+
 
         $contract                   =   new Contract();
-        $contract->client_name      =   $request->client_name;
+       
         $contract->job_date         =   $request->job_date;
         $contract->end_date         =   $request->end_date;
         $contract->email            =   $request->email;
         $contract->address          =   $request->address;
+        $contract->job_date         =   $request->job_date;
+        $contract->end_date         =   $request->end_date;
         $contract->job_details      =   $request->job_details;
         $contract->requirements     =   $request->requirements;
-        $contract->decription       =   $request->decription;
+        $contract->description      =   $request->description;
         $contract->profile_id       =   $request->profile_id;
         $contract->mobile           =   $request->mobile;
-        $contract->user_id          =   '3';//Auth::user()->id;
+        $contract->user_id          =   Auth::user()->id;
         $contract->cost             =   $request->cost;
-       // $contract->sign             =   $signature;
+        $contract->sign             =   $signature;
        //var_dump($contract);
         $contract->save();
 
@@ -60,7 +72,7 @@ class ConreqController extends Controller
     public function update(Request $request, $id)
     {
         $contract                   =   Contract::find($id);
-        $contract->client_name      =   $request->client_name;
+       
         $contract->job_date         =   $request->job_date;
         $contract->end_date         =   $request->end_date;
         $contract->email            =   $request->email;

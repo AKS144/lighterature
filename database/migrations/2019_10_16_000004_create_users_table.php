@@ -13,7 +13,10 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->date('exp_date')->nullable();
-            $table->tinyInteger('status')->default('1');
+            $table->date('notify_date')->nullable();
+            $table->date('suspend_date')->nullable();
+            $table->tinyInteger('package')->default('0');
+            $table->tinyInteger('status')->default('0');
             $table->datetime('email_verified_at')->nullable();
             $table->string('password');
             $table->string('remember_token')->nullable();

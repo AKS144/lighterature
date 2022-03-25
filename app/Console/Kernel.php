@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\Expiry::class,
     ];
 
     /**
@@ -26,7 +26,13 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('JobDelete')->everyMinute();
+        //->dailyAt('13:00');
+        //$schedule->command('JobDelete')->everyMinute();
+        $schedule->command('JobDelete')->dailyAt('11:28');
+        //$schedule->command('Expiry')->everyMinute();
+        $schedule->command('Expiry')->dailyAt('11:28');
+        $schedule->command('Notify')->dailyAt('11:28');
+        $schedule->command('Suspend')->dailyAt('11:28');
     }
 
     /**

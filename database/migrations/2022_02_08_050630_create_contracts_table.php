@@ -27,7 +27,7 @@ class CreateContractsTable extends Migration
             $table->integer('mobile');
             $table->string('user_id');
             $table->string('end_date');
-            $table->string('sign');
+            $table->text('sign');
             $table->timestamps();
         });
     }

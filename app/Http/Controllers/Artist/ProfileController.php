@@ -38,28 +38,19 @@ class ProfileController extends Controller
             'gender'        =>   'required',
             'idtype'        =>   'required',
             //'u_no'        =>   'digits:12|numeric|unique:users,aadhar',
-            'dob'           =>   'required|date',
+            'dob'           =>   'required|date|olderThan:18',           
             'location'      =>   'requried',
             'category'      =>   'required',
-            'profile_img'   =>   'required|image|mimes:jpg,jpeg,png,svg,gif|max:5120',
-            'url_twitter'   =>   'max:255',
-            'url_instagram' =>   'max:255',
-            'url_linkedon'  =>   'max:255',
-            'url_facebook'  =>   'max:255',
+            'profile_img'   =>   'required|image|mimes:jpg,jpeg,png,svg,gif|max:5120',           
             'end_date'      =>   'required|date|after:start_date',
-            //'sub_plan'    =>   '',
+          
             'studio_address'=> 'max:255',
             'skills'        =>   'max:255',
             'exp_yrs'       =>   'numeric|digits:2|max:255',
             'worked_loc'    =>   'max:255',
             'course_name'   =>   'max:255',
             'course_cert_img'=>  'max:5120|image|mimes:jpg,jpeg,png,svg,gif',
-            'qualification' =>   'max:255',
-            'cam_desc'      =>   'max:255',
-            'drone_desc'    =>   'max:255',
-            'gimbal_desc'   =>   'max:255',
-            'lens_desc'     =>   'max:255',
-            'other_desc'    =>   'max:255',
+            'qualification' =>   'max:255',            
             'education'     =>   'required|max:255',
             //'password'      =>   'required|min:8|max:16|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
             //'password'      =>   'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/|confirmed',
@@ -100,7 +91,7 @@ class ProfileController extends Controller
             $image_resize   = Image::make($image_file->getRealPath());
             $image_resize->resize(400, 300);
             $image_resize   = 'profile_img/'.$image_filename;
-            Storage::disk('s3')->put($image_resize, file_get_contents($image_file));
+            Storage::disk('Wasabi')->put($image_resize, file_get_contents($image_file));
             $profile->profile_img = $image_filename;
         }
 
@@ -148,7 +139,7 @@ class ProfileController extends Controller
             $image_resize   = Image::make($image_file->getRealPath());
             $image_resize->resize(400, 300);
             $image_resize   = 'course_cert_img/'.$image_filename;
-            Storage::disk('s3')->put($image_resize, file_get_contents($image_file));
+            Storage::disk('Wasabi')->put($image_resize, file_get_contents($image_file));
             $profile->course_cert_img = $image_filename;
         }
 
@@ -166,7 +157,8 @@ class ProfileController extends Controller
         $profile->categories()->sync($request->input('categories', []));
     
 
-        foreach ($request->add_Equipment as $key => $value) 
+        //foreach ($request->add_Equipment as $key => $value) 
+        foreach ($request->add_Equipment as $value) 
         {          
             $item               =   new Item();
             $item->user_id      =   Auth::user()->id;

@@ -1,6 +1,10 @@
 <?php
 
+use App\User;
+use Carbon\Carbon;
+use App\Mail\ExpiryAlert;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\Client\ConreqController;
@@ -11,8 +15,25 @@ Route::group(['middleware' => 'prevent-back'],function(){
     //...
 });
 
+Route::get('/test',function(){
+   //code test..
+  //$user = User::where('exp_date','=',Carbon::now()->toDateString())->get();
+  // $c = 1;
+   //$user->update(['status' => $c]);
+   $user1 = User::where('exp_date','=',Carbon::now()->toDateString())->update(['status' => 1]);
+  // dd($user);
+
+});
 
 
+Route::get('/w', function () {
+    return view('fileUpload');
+   });
+   
+   Route::post('upload',function(){
+    request()->file('file')->store('my-file','Wasabi');})->name('upload');
+
+//Auth::routes(['register' => false]);
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
@@ -53,17 +74,14 @@ Route::resource('profiles', 'ProfileController')->only(['index', 'show','upload'
 Route::get('category/{category}', 'CategoryController@showprof')->name('categories.showprof');
 Route::get('location/{location}', 'LocationController@showprof')->name('locations.showprof');
 Route::get('upload','ProfileController@upload')->name('upload');
-Route::get('add-wallet', [WalletController::class,'payWithRazorpay'])->name('paywithrazorpay');
-Route::post('payment', [WalletController::class,'payment'])->name('payment');
+Route::get('add-wallet','WalletController@payWithRazorpay')->name('paywithrazorpay');
+Route::post('payment', 'WalletController@payment')->name('payment');
 
 //contract
 Route::get('/contract/create/{id}','ConreqController@create');
-Route::post('/contract-store','ConreqController@store')->name('contract.store');
+Route::post('/contract/create','ConreqController@store')->name('contract.store');
 Route::get('/contract/show','ConreqController@show');
 
-
-Route::get('laravel-signature-pad','SignatureController@index');
-Route::post('laravel-signature-pad','SignatureController@store');
 
 
 Route::resource('/profile',Artist\ProfileController::class);
@@ -88,6 +106,39 @@ Route::delete('/photos/{id}',     'PhotosController@destroy');
 //Route::resource('/wishlist', 'WishlistController', ['except' => ['create', 'edit', 'show', 'update']]);
 //Route::resource('/client', [App\Http\Controllers\ClientController::class]);
 //Route::resource('/artist', [App\Http\Controller\ArtistController::class]);
+
+
+
+Route::group(['prefix' => 'artist', 'as' => 'artist.', 'namespace' => 'Artist', 'middleware' => ['auth','artist']], function () {
+
+    Route::get('/', 'HomeController@index')->name('home');
+
+    /*
+    Route::get('/albums',        'AlbumsController@index');
+    Route::get('/albums/create', 'AlbumsController@create');
+    Route::get('/albums/{id}',   'AlbumsController@show');
+    Route::post('/albums/store', 'AlbumsController@store');
+
+    Route::get('/photos/create/{id}', 'PhotosController@create');
+    Route::post('/photos/store',      'PhotosController@store');
+    Route::get('/photos/{id}',        'PhotosController@show');
+    Route::delete('/photos/{id}',     'PhotosController@destroy');*/
+
+});
+
+Route::group(['prefix' => 'client', 'as' => 'client.', 'namespace' => 'Client', 'middleware' => ['auth','client']], function () {
+
+    Route::get('/', 'HomeController@index')->name('home');
+
+});
+
+
+Route::group(['prefix' => 'expert', 'as' => 'expert.', 'namespace' => 'Expert', 'middleware' => ['auth','expert']], function () {
+
+   //.. for expert url 
+
+});
+
 
 
 
@@ -121,29 +172,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Jobs
     Route::delete('jobs/destroy', 'JobsController@massDestroy')->name('jobs.massDestroy');
     Route::resource('jobs', 'JobsController');
-});
 
-
-Route::group(['prefix' => 'artist', 'as' => 'artist.', 'namespace' => 'Artist', 'middleware' => ['auth','artist']], function () {
-
-    Route::get('/', 'HomeController@index')->name('home');
-
-    /*
-    Route::get('/albums',        'AlbumsController@index');
-    Route::get('/albums/create', 'AlbumsController@create');
-    Route::get('/albums/{id}',   'AlbumsController@show');
-    Route::post('/albums/store', 'AlbumsController@store');
-
-
-    Route::get('/photos/create/{id}', 'PhotosController@create');
-    Route::post('/photos/store',      'PhotosController@store');
-    Route::get('/photos/{id}',        'PhotosController@show');
-    Route::delete('/photos/{id}',     'PhotosController@destroy');*/
-
-});
-
-Route::group(['prefix' => 'client', 'as' => 'client.', 'namespace' => 'Client', 'middleware' => ['auth','client']], function () {
-
-    Route::get('/', 'HomeController@index')->name('home');
+    Route::resource('rewards','RewardsController');
 
 });

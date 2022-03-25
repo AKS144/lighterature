@@ -19,6 +19,7 @@ class CreateAlbumsTable extends Migration
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->text('description');
+            $table->integer('status')->default('0');
             $table->string('cover_image');
             $table->timestamps();
         });

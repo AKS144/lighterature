@@ -8,6 +8,7 @@ use App\Category;
 use App\Location;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class JobsController extends Controller
 {
@@ -30,14 +31,14 @@ class JobsController extends Controller
             'name'          =>  'required|regex:/^[a-zA-ZÑñ\s]+$/|max:120',           
             'start_date'    =>  'required|date',
             'end_date'      =>  'required|date|after:start_date', 
-            'job_link'      =>  'max:255',
-            'company'       =>  'required|regex:/^[a-zA-ZÑñ\s]+$/|max:120',    
+            //'job_link'      =>  'max:255',
+            //'company'       =>  'required|regex:/^[a-zA-ZÑñ\s]+$/|max:120',    
             'address'       =>  'required|max:255',    
-            'requirements'  =>  'max:255',
-            'description'   =>  'max:255',  
-            'salary'        =>  'max:255', 
+            'requirements'  =>  'required|max:255',
+            'description'   =>  'required|max:255',  
+            'salary'        =>  'required|max:255', 
             'start_date'    =>  'required|date',
-            'end_date'      =>  'required|date|after:start_date',          
+        
         ]);
 
        
@@ -52,6 +53,7 @@ class JobsController extends Controller
         $job->address       =   $request->address;
         $job->description   =   $request->description;
         $job->requirements  =   $request->requirements;
+        //$job->user_id       =   Auth::user()->id;
         $job->salary        =   $request->salary;
         $job->save();
 

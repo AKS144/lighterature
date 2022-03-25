@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Role;
 use App\User;
+use App\Mail\Welcome;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class ClientController extends Controller
 {
@@ -33,6 +35,16 @@ class ClientController extends Controller
         $client->save();
         $client = Role::select('id')->where('title', 'client')->first();
         $client->roles()->attach($client);
+
+        $data=[
+            'name'=> $request->input('name'),
+            'password'=> $request->input('password'),
+            'email'=> $request->input('email'),
+            'end_date' => $request->input('end_date'),
+        ];    
+       
+        Mail::to($request['email'])->send(new Welcome($data));
+
     }
 
 

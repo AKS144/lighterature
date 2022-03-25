@@ -43,6 +43,25 @@ class User extends Authenticatable
         'email_verified_at',
     ];
 
+    protected $dateFormats = [
+        'exp_date'     => 'd-m-Y',
+        'suspend_date' => 'd-m-Y',
+        'notify_date'  => 'd-m-Y',
+        'updated_at'   => 'd-m-Y',
+        'created_at'   => 'd-m-Y',
+        'deleted_at'   => 'd-m-Y',
+    ];
+
+
+    // protected function asDateTime($value)
+    // {
+    //     return parent::asDateTime($value)->format('d/m/y');
+    // }
+
+    public function setDateAttribute($value) 
+    {
+        $this->attributes['date'] = (new Carbon($value))->format('d/m/y');
+    }
 
     public function wishlist()
     {
@@ -75,10 +94,15 @@ class User extends Authenticatable
     {
         return $this->roles()->where('id', 2)->exists();
     }
-
+   
     public function getIsClientAttribute()
     {
         return $this->roles()->where('id', 3)->exists();
+    }
+
+    public function getIsExpertAttribute()
+    {
+        return $this->roles()->where('id', 4)->exists();
     }
 
     public function sendPasswordResetNotification($token)

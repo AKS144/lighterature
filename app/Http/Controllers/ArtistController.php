@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Role;
 use App\User;
 use App\Profile;
+use App\Mail\Welcome;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class ArtistController extends Controller
 {
@@ -25,22 +27,27 @@ class ArtistController extends Controller
 
     public function store(Request $request)
     {
-        $user            =   new User();
-        $user->name      =   $request->name;
-        $user->email     =   $request->email;
-        $user->mobile    =   $request->mobile;      
-        $user->password  =   Hash::make($request->password);
+        $user                 =   new User();
+        $user->name           =   $request->name;
+        $user->email          =   $request->email;
+        $user->mobile         =   $request->mobile; 
+        $user->exp_date       =   $request->exp_date;
+        $user->notify_date    =   $request->notify_date;
+        $user->suspend_date   =   $request->suspend_date;
+        $user->password       =   Hash::make($request->password);
         $user->save();
 
-        $user = Role::select('id')->where('title', 'user')->first();
+        $user = Role::select('id')->where('title', 'artist')->first();
         $user->roles()->attach($user);
 
-       /* $profile           =   new Profile();
-        $profile->name     =   $user->name;
-        $profile->email    =   $user->email;
-        $profile->password =   $user->passsword;
-        $profile->user_id  =   $user->id;
-        $profile->save();*/
+        $data=[
+            'name'=> $request->input('name'),
+            'password'=> $request->input('password'),
+            'email'=> $request->input('email'),
+            'end_date' => $request->input('end_date'),
+        ];    
+       
+        Mail::to($request['email'])->send(new Welcome($data));
     }
 
 
